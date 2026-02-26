@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Cars - Car Rental System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #333;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            color: white;
+            font-size: 24px;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+        .navbar-links a:hover {
+            background-color: #555;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .car-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .car-card:hover {
+            transform: translateY(-5px);
+        }
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #e9ecef;
+        }
+        .car-image-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        .car-info {
+            padding: 20px;
+        }
+        .car-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .car-info p {
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 15px;
+        }
+        .price span {
+            font-size: 14px;
+            color: #666;
+            font-weight: normal;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .no-cars {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🚗 Car Rental System</h1>
+        <div class="navbar-links">
+            <a href="{% url 'car_list_url' %}">Cars</a>
+            <a href="{% url 'login_url' %}">Login</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2>Available Cars for Rent</h2>
+        
+        {% if cars %}
+        <div class="cars-grid">
+            {% for car in cars %}
+            <div class="car-card">
+                {% if car.image %}
+                <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" class="car-image">
+                {% else %}
+                <div class="car-image-placeholder">🚗</div>
+                {% endif %}
+                <div class="car-info">
+                    <h3>{{ car.brand }} {{ car.model }}</h3>
+                    <p><strong>Year:</strong> {{ car.year }}</p>
+                    <p><strong>Color:</strong> {{ car.color }}</p>
+                    <p><strong>Transmission:</strong> {{ car.get_transmission_display }}</p>
+                    <div class="price">${{ car.daily_rate }} <span>/ day</span></div>
+                    <a href="{% url 'car_detail_url' car.id %}" class="btn">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-cars">
+            <p>No cars available at the moment. Please check back later.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
