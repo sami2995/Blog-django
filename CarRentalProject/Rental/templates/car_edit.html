@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Car - Car Rental System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #333;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            color: white;
+            font-size: 24px;
+        }
+        .navbar-links {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+        .navbar-links a:hover {
+            background-color: #555;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            color: #007bff;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            margin-left: 10px;
+        }
+        .current-image {
+            margin-bottom: 15px;
+        }
+        .current-image img {
+            max-width: 200px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🚗 Car Rental System</h1>
+        <div class="navbar-links">
+            <a href="{% url 'dashboard_url' %}">Dashboard</a>
+            <a href="{% url 'car_list_url' %}">Cars</a>
+            <a href="{% url 'customer_admin_url' %}">Customers</a>
+            <a href="{% url 'car_admin_url' %}">Manage Cars</a>
+            <a href="{% url 'rental_admin_url' %}">Rentals</a>
+            <a href="{% url 'logout_url' %}">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="{% url 'car_admin_url' %}" class="back-link">← Back to Cars</a>
+        
+        <h2>Edit Car</h2>
+        
+        <div class="card">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <input type="text" id="brand" name="brand" value="{{ car.brand }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="model">Model</label>
+                        <input type="text" id="model" name="model" value="{{ car.model }}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="number" id="year" name="year" value="{{ car.year }}" min="1900" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="text" id="color" name="color" value="{{ car.color }}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plate_number">Plate Number</label>
+                        <input type="text" id="plate_number" name="plate_number" value="{{ car.plate_number }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transmission">Transmission</label>
+                        <select id="transmission" name="transmission" required>
+                            <option value="automatic" {% if car.transmission == 'automatic' %}selected{% endif %}>Automatic</option>
+                            <option value="manual" {% if car.transmission == 'manual' %}selected{% endif %}>Manual</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="daily_rate">Daily Rate ($)</label>
+                        <input type="number" id="daily_rate" name="daily_rate" value="{{ car.daily_rate }}" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Availability</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="available" name="available" {% if car.available %}checked{% endif %}>
+                            <label for="available" style="margin-bottom: 0; font-weight: normal;">Available for rent</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {% if car.image %}
+                    <div class="current-image">
+                        <label>Current Image</label>
+                        <img src="{{ car.image.url }}" alt="{{ car.brand }}">
+                    </div>
+                    {% endif %}
+                    <label for="image">{% if car.image %}Change Image{% else %}Car Image{% endif %}</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Car</button>
+                <a href="{% url 'car_admin_url' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
