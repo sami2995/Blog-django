@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Car Rental System</title>
+    <title>Sign Up - Car Rental System</title>
     <style>
         * {
             margin: 0;
@@ -24,7 +24,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
         }
         h1 {
             text-align: center;
@@ -41,14 +41,17 @@
             font-weight: bold;
         }
         input[type="text"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="email"],
+        textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
         }
-        input:focus {
+        input:focus,
+        textarea:focus {
             outline: none;
             border-color: #007bff;
         }
@@ -93,8 +96,8 @@
 <body>
     <div class="login-container">
         <div class="car-icon">🚗</div>
-        <h1>Car Rental Login</h1>
-        
+        <h1>Create an Account</h1>
+
         {% if messages %}
         <div class="messages">
             {% for message in messages %}
@@ -102,7 +105,7 @@
             {% endfor %}
         </div>
         {% endif %}
-        
+
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
@@ -113,9 +116,34 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
+            <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" id="password2" name="password2" required>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="license_number">License Number</label>
+                <input type="text" id="license_number" name="license_number" required>
+            </div>
+            <button type="submit">Sign Up</button>
         </form>
-        <p style="text-align:center; margin-top:15px;">Don't have an account? <a href="{% url 'signup_url' %}">Sign up</a></p>
+        <p style="text-align:center; margin-top:15px;">Already have an account? <a href="{% url 'login_url' %}">Login</a></p>
     </div>
 </body>
 </html>

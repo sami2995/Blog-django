@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent {{ car.brand }} {{ car.model }} - Car Rental System</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body {font-family:Arial,sans-serif;background:#f5f5f5;}
+        .container {max-width:600px;margin:50px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+        h1,h2 {text-align:center;color:#333;}
+        .form-group {margin-bottom:20px;}
+        label{display:block;margin-bottom:5px;color:#555;font-weight:bold;}
+        input[type=date] {width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;}
+        .price-info {text-align:center;margin-bottom:20px;font-size:18px;color:#007bff;}
+        button {width:100%;padding:12px;background:#007bff;color:#fff;border:none;border-radius:4px;font-size:16px;cursor:pointer;}
+        button:hover{background:#0056b3;}
+        .messages{margin-bottom:20px;}
+        .message{padding:10px;border-radius:4px;margin-bottom:10px;}
+        .message.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+        .message.success{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rent {{ car.brand }} {{ car.model }}</h1>
+        <div class="price-info">Rate: ETB {{ car.daily_rate }} / day</div>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date" required>
+            </div>
+            <button type="submit">Submit Rental Request</button>
+        </form>
+    </div>
+</body>
+</html>

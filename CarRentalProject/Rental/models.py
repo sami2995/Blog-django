@@ -2,6 +2,12 @@ from django.db import models
 
 
 class Customer(models.Model):
+    # optional link to Django user account
+    user = models.OneToOneField(
+        'auth.User', on_delete=models.CASCADE,
+        null=True, blank=True,
+        related_name='customer'
+    )
     name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20)
@@ -36,6 +42,12 @@ class Car(models.Model):
 
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year})"
+
+    @property
+    def is_currently_rented(self):
+        """Return True if there is an active rental for this car."""
+        # use related_name 'rentals' defined on Rental.car
+        return self.rentals.filter(status='active', visible=True).exists()
 
     class Meta:
         ordering = ['brand', 'model']

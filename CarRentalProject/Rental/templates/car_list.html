@@ -112,18 +112,67 @@
             padding: 50px;
             color: #666;
         }
+        /* hero/banner styling */
+        .hero {
+            background-image: url('https://via.placeholder.com/1600x400?text=Car+Rental');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .hero-content h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        .footer {
+            background-color: #333;
+            color: #bbb;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .footer a {
+            color: #bbb;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .footer a:hover {
+            color: white;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <h1>🚗 Car Rental System</h1>
         <div class="navbar-links">
+            <a href="#" class="active">Home</a>
             <a href="{% url 'car_list_url' %}">Cars</a>
-            <a href="{% url 'login_url' %}">Login</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout_url' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login_url' %}">Login</a>
+                <a href="{% url 'signup_url' %}">Sign Up</a>
+            {% endif %}
         </div>
     </nav>
     
-    <div class="container">
+    <!-- hero/landing banner -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Welcome to Our Car Rental Service</h2>
+            <p>Find the perfect ride for your journey.</p>
+            <a href="#cars-section" class="btn">Browse Cars</a>
+        </div>
+    </section>
+
+    <div class="container" id="cars-section">
         <h2>Available Cars for Rent</h2>
         
         {% if cars %}
@@ -140,8 +189,11 @@
                     <p><strong>Year:</strong> {{ car.year }}</p>
                     <p><strong>Color:</strong> {{ car.color }}</p>
                     <p><strong>Transmission:</strong> {{ car.get_transmission_display }}</p>
-                    <div class="price">${{ car.daily_rate }} <span>/ day</span></div>
+                    <div class="price">ETB {{ car.daily_rate }} <span>/ day</span></div>
                     <a href="{% url 'car_detail_url' car.id %}" class="btn">View Details</a>
+                    {% if user.is_authenticated and not user.is_staff and car.available %}
+                    <a href="{% url 'rent_car_url' car.id %}" class="btn" style="margin-left:5px;">Rent</a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -152,5 +204,13 @@
         </div>
         {% endif %}
     </div>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {% now "Y" %} Car Rental System. All rights reserved.</p>
+            <p><a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a></p>
+        </div>
+    </footer>
 </body>
 </html>
